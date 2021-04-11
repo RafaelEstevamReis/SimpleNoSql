@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31129.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simple.NoSql", "Simple.NoSql\Simple.NoSql.csproj", "{4509E76A-D34F-444D-863B-848BD6F260CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simple.NoSql.Test", "Simple.NoSql.Test\Simple.NoSql.Test.csproj", "{F17455B1-A333-4059-BBAC-5BF91DFADB70}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4509E76A-D34F-444D-863B-848BD6F260CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4509E76A-D34F-444D-863B-848BD6F260CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4509E76A-D34F-444D-863B-848BD6F260CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4509E76A-D34F-444D-863B-848BD6F260CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F17455B1-A333-4059-BBAC-5BF91DFADB70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F17455B1-A333-4059-BBAC-5BF91DFADB70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F17455B1-A333-4059-BBAC-5BF91DFADB70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F17455B1-A333-4059-BBAC-5BF91DFADB70}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {66BAD94D-7D7B-4A20-91A4-EDE2C2BD7E47}
+	EndGlobalSection
+EndGlobal
