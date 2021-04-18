@@ -3,6 +3,7 @@ using Newtonsoft.Json.Bson;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +21,7 @@ namespace Simple.NoSql
         {
             DirectoryInfo di = new DirectoryInfo(directory);
             if (!di.Exists) di.Create();
+            Directory = di;
             DatabaseVersion = DatabaseVersion.V1_0;
 
             hasher = SHA256.Create();
@@ -31,8 +33,17 @@ namespace Simple.NoSql
             FileInfo fi = new FileInfo(path);
             if (!fi.Directory.Exists) fi.Directory.Create();
 
-            using var fs = new FileStream(fi.FullName, FileMode.Create, FileAccess.Write);
-            writeBson(obj, fs);
+            var container = new DataContainer() { Key = key, };
+            using (var ms = new MemoryStream())
+            {
+                writeBson(obj, ms);
+                container.Data = ms.ToArray();
+            }
+
+            using (var fs = new FileStream(fi.FullName, FileMode.Create, FileAccess.Write))
+            {
+                writeBson(container, fs);
+            }
         }
         public T Get<T>(string key)
         {
@@ -41,13 +52,40 @@ namespace Simple.NoSql
             if (!fi.Exists) throw new FileNotFoundException();
 
             using var fs = new FileStream(fi.FullName, FileMode.Open, FileAccess.Read, FileShare.Read);
-            return readBson<T>(fs);
+            var container = readBson<DataContainer>(fs);
+
+            using var ms = new MemoryStream(container.Data);
+            ms.Position = 0;
+            return readBson<T>(ms);
+        }
+        public IEnumerable<string> GetAllKeys()
+        {
+            foreach (var f in getAllDataFiles())
+            {
+                using var fs = new FileStream(f.FullName, FileMode.Open, FileAccess.Read, FileShare.Read);
+                var container = readBson<DataContainer>(fs);
+                yield return container.Key;
+            }
+        }
+        public IEnumerable<FileInfo> getAllDataFiles()
+        {
+            foreach (var d1 in Directory.GetDirectories())
+            {
+                foreach (var d2 in d1.GetDirectories())
+                {
+                    foreach (var file in d2.GetFiles("*.data"))
+                    {
+                        yield return file;
+                    }
+                }
+            }
         }
 
         private string getKeyFileName(string key)
         {
             var bKey = Encoding.UTF8.GetBytes(key);
-            return fastToHex(hasher.ComputeHash(bKey));
+            var hex = fastToHex(hasher.ComputeHash(bKey));
+            return $"{hex}.data";
         }
         private string getKeyFilePath(string key)
         {
@@ -84,9 +122,9 @@ namespace Simple.NoSql
         }
         private static void createHexTable()
         {
-            for (byte i = 0; i <= 0xFF; i++)
+            for (int i = 0; i <= 0xFF; i++)
             {
-                hexTable[i] = i.ToString("X2");
+                hexTable.Add((byte)i, i.ToString("X2"));
             }
         }
         static string fastToHex(byte[] bytes)
